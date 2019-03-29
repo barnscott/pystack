@@ -1,0 +1,32 @@
+<head>
+    <title>
+        My website
+    </title>
+</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<header>
+    {% if session['user_id'] %}
+    Logged in: {{ session['user_id'] }}
+    {% endif %}
+    {% if status %}
+    <br><b>Success: {{ status }}</b>
+    {% endif %}
+    {% for message in get_flashed_messages() %}
+    {{ message }}
+    {% endfor %}
+    <h1>My new site</h1>
+    <p>
+        <a href="{{ url_for('index') }}"><button>Home</button></a>
+        <a href="{{ url_for('text_page') }}"><button>Example:Text</button></a>
+        <a href="{{ url_for('post_page') }}"><button>Example:Post</button></a>
+        
+        
+        {% if session['user_id'] %}
+        <a href="{{ url_for('bulletin') }}"><button>Bulletin manager</button></a>
+        <a href="{{ url_for('logout') }}"><button>Logout</button></a>
+        {% else %}
+        <a href="{{ url_for('login') }}"><button>Login</button></a>
+        <a href="{{ url_for('register') }}"><button>Register</button></a>
+        {% endif %}
+    </p>
+</header>

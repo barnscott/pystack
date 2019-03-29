@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+{% include "elements/header.html" %}
+<body>
+    <h2>Manage bulletin</h2>
+    <p>Use the form below to update the bulletin board.</p>
+    <p>
+      <form method="post">
+        <table class="form">
+          <tr>
+            <td>
+              <label for="subject">News subject:</label>
+            </td>
+            <td>
+              <input name="subject" id="subject" maxlength="50" required>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <br><br>
+              <label for="message">News message:</label>
+            </td>
+            <td>
+              <textarea name="message" id="message" maxlength="100" rows="4" cols="50" required>{{ request.form['message'] }}</textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <br><br>
+              <input type="submit">
+            </td>
+          </tr>
+        </table>
+      </form>
+    </p>
+</body>
+{% include "elements/footer.html" %}
+</html>
