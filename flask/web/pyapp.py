@@ -10,6 +10,15 @@ from database import connector
 app = Flask(__name__)
 app.secret_key = os.environ['APP_SECRET_KEY']
 
+
+conf = {
+    'name': os.environ['pystack_name'],
+    'desc': 'Project: Pystack'
+}
+@app.context_processor
+def inject_conf_in_all_templates():
+    return dict(conf=conf)
+
 @app.route('/')
 @app.route('/index')
 @app.route('/index/<status>')
@@ -17,13 +26,15 @@ def index(status=None):
     con = connector()
     cur = con.cursor()
     cur.execute("select subject,message,created_on from bulletin order by bulletin_serial desc ")
-    news_bulletin = cur.fetchall() 
+    news_bulletin = cur.fetchall()
+    cur.execute("select title,content,created_on from blog order by blog_serial desc ")
+    blog = cur.fetchall() 
     cur.close()
     con.close()
-    return render_template('index.html',news_bulletin=news_bulletin,status=status)
+    return render_template('index.html',news_bulletin=news_bulletin,blog=blog,status=status)
 
-@app.route('/bulletin', methods=('get','post'))
-def bulletin():
+@app.route('/manager', methods=('get','post'))
+def manager():
     status=None
     if request.method == 'POST':
         subject = request.form['subject']
@@ -37,12 +48,16 @@ def bulletin():
         status='bulletin posted'
         return redirect(url_for('index',status=status))
 
-    return render_template('bulletin.html')
+    return render_template('manager.html')
 
 @app.route('/text_page')
 @app.route('/text_page/<text>')
 def text_page(text=None):
     return render_template('text_page.html',text=text)
+
+@app.route('/blog')
+def blog():
+    return render_template('blog.html')
 
 @app.route('/post_page', methods=('get','post'))
 def post_page():

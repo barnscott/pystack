@@ -18,6 +18,15 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         created_on TIMESTAMP NOT NULL
     );
 
+    CREATE TABLE blog (
+        blog_serial serial PRIMARY KEY,
+        title VARCHAR (50) NOT NULL,
+        content VARCHAR (200) NOT NULL,
+        created_on TIMESTAMP NOT NULL
+    );
+    INSERT INTO blog VALUES
+    (DEFAULT,'First blog post','I did so much this week. Like omg, right?',current_timestamp);
+
 EOSQL
 
 # INSERT INTO users VALUES
