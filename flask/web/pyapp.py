@@ -37,16 +37,28 @@ def index(status=None):
 def manager():
     status=None
     if request.method == 'POST':
-        subject = request.form['subject']
-        message = request.form['message']
-        con = connector()
-        cur = con.cursor()
-        cur.execute("INSERT INTO bulletin VALUES (DEFAULT,'%s','%s',current_timestamp)" % (subject,message))
-        con.commit()
-        cur.close()
-        con.close()
-        status='bulletin posted'
-        return redirect(url_for('index',status=status))
+        if request.form['send'] == 'Create bulletin':
+            subject = request.form['subject']
+            message = request.form['message']
+            con = connector()
+            cur = con.cursor()
+            cur.execute("INSERT INTO bulletin VALUES (DEFAULT,'%s','%s',current_timestamp)" % (subject,message))
+            con.commit()
+            cur.close()
+            con.close()
+            status='bulletin posted'
+            return redirect(url_for('index',status=status))
+        if request.form['send'] == 'Create blog post':
+            title = request.form['title']
+            content = request.form['content']
+            con = connector()
+            cur = con.cursor()
+            cur.execute("INSERT INTO blog VALUES (DEFAULT,'%s','%s',current_timestamp)" % (title,content))
+            con.commit()
+            cur.close()
+            con.close()
+            status='blog posted'
+            return redirect(url_for('index',status=status))
 
     return render_template('manager.html')
 

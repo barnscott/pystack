@@ -1,6 +1,7 @@
 {% include "elements/header.html" %}
+
 <h2>Create bulletin</h2>
-<p>Use the form below to update the bulletin board.</p>
+<p>Use the form below to create the news bulletin.</p>
 <p>
   <form method="post">
     <table class="form">
@@ -22,12 +23,45 @@
         </td>
       </tr>
       <tr>
+        <td></td>
         <td>
-          <br><br>
-          <input type="submit">
+          <input type="submit" name="send" value="Create bulletin">
         </td>
       </tr>
     </table>
   </form>
 </p>
+
+<h2>Create blog post</h2>
+<p>Use the form below to create a new blog post.</p>
+<p>
+  <form method="post">
+    <table class="form">
+      <tr>
+        <td>
+          <label for="title">Blog title:</label>
+        </td>
+        <td>
+          <input name="title" id="title" maxlength="50" required>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <br><br>
+          <label for="content">News content:</label>
+        </td>
+        <td>
+          <textarea name="content" id="content" maxlength="200" rows="4" cols="50" required>{{ request.form['content'] }}</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <input type="submit" name="send" value="Create blog post">
+        </td>
+      </tr>
+    </table>
+  </form>
+</p>
+
 {% include "elements/footer.html" %}
