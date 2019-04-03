@@ -8,7 +8,7 @@
             <th>News subject</th> 
             <th>News message</th>
         </tr>
-    {% for i in news_bulletin %} 
+    {% for i in results[0] %} 
         <tr>
             <td>{{ i[2].strftime('%Y-%m-%d %H:%M') }}</td>
             <td>{{ i[0] }}</td> 
@@ -18,14 +18,19 @@
     </table>
     <h2>Blog</h2>
     <table class="blog">
-    {% for i in blog %} 
+    {% for i in results[1] %} 
         <tr>
-            <td><b>{{ i[0] }}</b> -- {{ i[2].strftime('%Y-%m-%d %H:%M') }}</td>
+            <td><a href="{{ url_for( 'blog' , blog_id='%s' % i[0]) }}">{{ i[1] }}</a>-- {{ i[3].strftime('%Y-%m-%d') }}</td>
         </tr>
         <tr>
-            <td>{{ i[1] }}</td>
+            <td>
+                {{ i[2] }}
+                {% if i[2]|length > 29 %}
+                    ...
+                {% endif %}
+            </td>
         </tr>
-        <tr></tr>
+        <tr><td><br><br</td></tr>
     {% endfor %}
     </table>
 

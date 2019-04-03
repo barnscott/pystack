@@ -36,7 +36,7 @@ sudo docker run --name pystack_db0 \
 -d postgres
 
 #check it
-docker exec -it pystack_db0 bash -c 'psql -U postgres pystack_db0 -c "select * from bulletin"'
+sudo docker exec -it pystack_db0 bash -c 'psql -U postgres pystack_db0 -c "select * from bulletin"'
 
 
 -------------------------------------

@@ -1,5 +1,40 @@
 {% include "elements/header.html" %}
-<h2>Blog</h2>
-    
+
+{% if session['user_id']  %}
+
+<form method="post">
+    <table class="form">
+        <tr>
+        <td>
+            <label for="title">Blog title:</label>
+        </td>
+        <td>
+            <input name="title" id="title" value='{{ blog[0][1] }}' maxlength="50" required>
+        </td>
+        </tr>
+        <tr>
+        <td>
+            <br><br>
+            <label for="content">Blog content:</label>
+        </td>
+        <td>
+            <textarea name="content" id="content" maxlength="1000" rows="4" cols="50" required>{{ blog[0][2] }}{{ request.form['content'] }}</textarea>
+        </td>
+        </tr>
+        <tr>
+        <td></td>
+        <td>
+            <input type="submit" name="send" value="Update blog post">
+        </td>
+        </tr>
+    </table>
+</form>
+
+{% else %}
+    <h2>{{ blog[0][1] }}</h2>
+    <p>Date: {{ blog[0][3].strftime('%Y-%m-%d') }}</p>
+    <p>{{blog[0][2]}}</p>
+{% endif %}
+
 
 {% include "elements/footer.html" %}

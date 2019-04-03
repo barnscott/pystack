@@ -1,4 +1,4 @@
-table.bulletin th,tr,td{
+table.bulletin,table.bulletin th,table.bulletin td {
     border: 1px solid black;
     border-collapse: collapse;
     text-align: left;

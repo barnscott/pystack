@@ -7,15 +7,10 @@
 </head>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <header>
-    {% if status %}
-    <b>Success: {{ status }}  </b>
-    {% endif %}
-    {% if session['user_id'] %}
-    Logged in: {{ session['user_id'] }}
-    {% endif %}
-    {% for message in get_flashed_messages() %}
-    {{ message }}
-    {% endfor %}
+    {% for message in get_flashed_messages() %}{{ message }}{% endfor %}
+    {% if status %}<b>Success: {{ status }}  </b>{% endif %}
+    {% if session['user_id'] %}Logged in: {{ session['user_id'] }}{% endif %}
+    
     <h1>{{ conf.name }}</h1>
     <p>
         <a href="{{ url_for('index') }}"><button>Home</button></a>
