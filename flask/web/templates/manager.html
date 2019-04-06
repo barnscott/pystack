@@ -7,19 +7,19 @@
     <table class="form">
       <tr>
         <td>
-          <label for="subject">News subject:</label>
+          <label for="nb_subject">News bulletin subject:</label>
         </td>
         <td>
-          <input name="subject" id="subject" maxlength="50" required>
+          <input name="nb_subject" id="nb_subject" maxlength="50" required>
         </td>
       </tr>
       <tr>
         <td>
           <br><br>
-          <label for="message">News message:</label>
+          <label for="nb_content">News bulletin content:</label>
         </td>
         <td>
-          <textarea name="message" id="message" maxlength="100" rows="4" cols="50" required>{{ request.form['message'] }}</textarea>
+          <textarea name="nb_content" id="nb_content" maxlength="1000" rows="5" cols="200" required>{{ request.form['nb_content'] }}</textarea>
         </td>
       </tr>
       <tr>
@@ -39,19 +39,19 @@
     <table class="form">
       <tr>
         <td>
-          <label for="title">Blog title:</label>
+          <label for="b_subject">Blog subject:</label>
         </td>
         <td>
-          <input name="title" id="title" maxlength="50" required>
+          <input name="b_subject" id="b_subject" maxlength="50" required>
         </td>
       </tr>
       <tr>
         <td>
           <br><br>
-          <label for="content">Blog content:</label>
+          <label for="b_content">Blog content:</label>
         </td>
         <td>
-          <textarea name="content" id="content" maxlength="200" rows="4" cols="50" required>{{ request.form['content'] }}</textarea>
+          <textarea name="b_content" id="b_content" maxlength="1000" rows="5" cols="200" required>{{ request.form['b_content'] }}</textarea>
         </td>
       </tr>
       <tr>

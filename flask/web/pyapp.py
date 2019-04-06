@@ -26,11 +26,11 @@ def index(status=None):
     con = connector()
     cur = con.cursor()
     results = []
-    cur.execute("select subject,message,created_on from bulletin order by bulletin_serial desc ")
+    cur.execute("select subject,content from bulletins where due_date >= current_date order by bulletin_id desc ")
     results.append(cur.fetchall())
     cur.close()
     cur = con.cursor()
-    cur.execute("select blog_serial,title,LEFT(content,30),created_on from blog order by blog_serial desc ")
+    cur.execute("select blog_id,subject,LEFT(content,30),created_on from blogs order by blog_id desc ")
     results.append(cur.fetchall())
     cur.close()
     con.close()
@@ -39,24 +39,26 @@ def index(status=None):
 @app.route('/manager', methods=('get','post'))
 def manager():
     status=None
+    if session['group_id'] is not '0':
+        return redirect(url_for('index'))
     if request.method == 'POST':
         if request.form['send'] == 'Create bulletin':
-            subject = request.form['subject']
-            message = request.form['message']
+            subject = request.form['nb_subject']
+            content = request.form['nb_content']
             con = connector()
             cur = con.cursor()
-            cur.execute("INSERT INTO bulletin VALUES (DEFAULT,'%s','%s',current_timestamp)" % (subject,message))
+            cur.execute("INSERT INTO bulletins VALUES (DEFAULT,current_timestamp,current_timestamp,'%s','%s')" % (subject,content))
             con.commit()
             cur.close()
             con.close()
             status='bulletin posted'
             return redirect(url_for('index',status=status))
         if request.form['send'] == 'Create blog post':
-            title = request.form['title']
-            content = request.form['content']
+            title = request.form['b_subject']
+            content = request.form['b_content']
             con = connector()
             cur = con.cursor()
-            cur.execute("INSERT INTO blog VALUES (DEFAULT,'%s','%s',current_timestamp)" % (title,content))
+            cur.execute("INSERT INTO blogs VALUES (DEFAULT,current_timestamp,current_timestamp,'%s','%s')" % (title,content))
             con.commit()
             cur.close()
             con.close()
@@ -74,11 +76,11 @@ def text_page(text=None):
 def blog(blog_id=None):
     if request.method == 'POST':
         if request.form['send'] == 'Update blog post':
-                title = request.form['title']
+                subject = request.form['subject']
                 content = request.form['content']
                 con = connector()
                 cur = con.cursor()
-                cur.execute("UPDATE blog SET title='%s', content='%s' where blog_serial='%s'" % (title,content,blog_id))
+                cur.execute("UPDATE blogs SET subject='%s', content='%s' where blog_id='%s'" % (subject,content,blog_id))
                 con.commit()
                 cur.close()
                 con.close()
@@ -87,7 +89,7 @@ def blog(blog_id=None):
     if blog_id:
         con = connector()
         cur = con.cursor()
-        cur.execute("select blog_serial,title,content,created_on from blog where blog_serial='%s'" % blog_id) 
+        cur.execute("select blog_id,subject,content,created_on from blogs where blog_id='%s'" % blog_id) 
         blog = cur.fetchall() 
         cur.close()
         con.close()
@@ -115,12 +117,12 @@ def register():
         elif not password:
             error = 'Password is required.'
         else:
-            cur.execute("SELECT users_serial FROM users WHERE username = '%s'" % username)
+            cur.execute("SELECT user_id FROM users WHERE username = '%s'" % username)
             if cur.fetchone() is not None:
-                error = "User %s is already registered"
+                error = "Username '%s' can not be registered for a new account"
 
         if error is None:
-            cur.execute("INSERT INTO users (username,password,created_on) VALUES ('%s','%s',current_timestamp)"%(username, generate_password_hash(password)))
+            cur.execute("INSERT INTO users VALUES (DEFAULT,DEFAULT,current_timestamp,current_timestamp,'%s','%s')" % (username, generate_password_hash(password)))
             con.commit()
             status='user registered'
             return redirect(url_for('index',status=status))
@@ -140,7 +142,7 @@ def login():
 
         con = connector()
         cur = con.cursor()
-        cur.execute("select users_serial,username,password from users where username='%s' fetch first 1 rows only" % username)
+        cur.execute("select group_id,username,password from users where username='%s' fetch first 1 rows only" % username)
         user = cur.fetchone()
         cur.close()
         con.close()
@@ -152,7 +154,8 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user[1]
+            session['group_id'] = user[0]
+            session['user'] = user[1]
             status='logged in'
             return redirect(url_for('index',status=status))
         

@@ -9,7 +9,7 @@
 <header>
     {% for message in get_flashed_messages() %}{{ message }}{% endfor %}
     {% if status %}<b>Success: {{ status }}  </b>{% endif %}
-    {% if session['user_id'] %}Logged in: {{ session['user_id'] }}{% endif %}
+    {% if session['user'] %}Logged in: {{ session['user'] }}{% endif %}
     
     <h1>{{ conf.name }}</h1>
     <p>
@@ -18,7 +18,7 @@
         <a href="{{ url_for('post_page') }}"><button>Example:Post</button></a>
         
         
-        {% if session['user_id'] %}
+        {% if session['group_id'] %}
         <a href="{{ url_for('manager') }}"><button>Site manager</button></a>
         <a href="{{ url_for('logout') }}"><button>Logout</button></a>
         {% else %}

@@ -1,9 +1,5 @@
 Python, Flask, Nginx, Postgres, Docker sample application.
 
-To do:
-- get pystack_name into the database to be read as site name
-- add docker compose
-
 How to use:
 
 #Clone/download the github project
@@ -27,13 +23,15 @@ pystack_name=sample_app
 sudo docker rm --force pystack_db0 && \
 sudo rm -fr $pystack_path/dbdata && \
 sudo docker run --name pystack_db0 \
---restart unless-stopped \
 --env-file=$pystack_path/flask_postgres.env \
 -v $pystack_path/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d \
 -v $pystack_path/dbdata:/var/lib/postgresql/data \
 --network=pynet \
 --hostname pystack_db0 \
+--restart unless-stopped \
 -d postgres
+
+
 
 #check it
 sudo docker exec -it pystack_db0 bash -c 'psql -U postgres pystack_db0 -c "select * from bulletin"'
@@ -44,17 +42,17 @@ sudo docker exec -it pystack_db0 bash -c 'psql -U postgres pystack_db0 -c "selec
 -------------------------------------
 #build flask
 
+sudo docker rm --force pystack_flask0 && \
 cd $pystack_path/flask && \
 sudo docker build . -t pystack_flask && \
-sudo docker rm --force pystack_flask0 && \
-sudo docker run -d \
+sudo docker run \
 -p 5000:5000 \
 --env-file=$pystack_path/flask_postgres.env \
 --env-file=$pystack_path/flask.env \
---restart unless-stopped \
 --network=pynet \
 --name pystack_flask0 \
-pystack_flask
+--restart unless-stopped \
+-d pystack_flask
 
 #if needed for debugging, do something like this to run on console
 
