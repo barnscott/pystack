@@ -1,15 +1,9 @@
 {% include "elements/header.html" %}
-<h2>What are we made of?</h2>
-<p>My site = nginx + python / flask + postgres + docker</p>
 <h2>News bulletin</h2>
     <table class="bulletin">
-        <tr>
-            <th>News subject</th> 
-            <th>News message</th>
-        </tr>
     {% for i in results[0] %} 
         <tr>
-            <td>{{ i[0] }}</td> 
+            <td>{{ i[0] }}:</td> 
             <td>{{ i[1] }}</td>
         </tr>
     {% endfor %}

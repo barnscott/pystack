@@ -36,10 +36,10 @@ def index(status=None):
     con.close()
     return render_template('index.html',results=results,status=status)
 
-@app.route('/manager', methods=('get','post'))
-def manager():
+@app.route('/post', methods=('get','post'))
+def post():
     status=None
-    if session['group_id'] is not '0':
+    if session['group_id'] is not 1:
         return redirect(url_for('index'))
     if request.method == 'POST':
         if request.form['send'] == 'Create bulletin':
@@ -65,13 +65,29 @@ def manager():
             status='blog posted'
             return redirect(url_for('index',status=status))
 
-    return render_template('manager.html')
+    return render_template('post.html')
 
-@app.route('/text_page')
-@app.route('/text_page/<text>')
-def text_page(text=None):
-    return render_template('text_page.html',text=text)
+@app.route('/users', methods=('get','post'))
+def users(user_id=None):
+    if session['group_id'] is not 1:
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        con = connector()
+        cur = con.cursor()
+        cur.execute("select user_id,group_id,created_on,modified_on,username,name_first,name_last,email from users where user_id='%s'" % user_id)
+        users = cur.fetchall() 
+        cur.close()
+        con.close()
+    else:
+        con = connector()
+        cur = con.cursor()
+        cur.execute("select user_id,group_id,created_on,modified_on,username,name_first,name_last,email from users")
+        users = cur.fetchall() 
+        cur.close()
+        con.close()
+    return render_template('users.html',users=users)
 
+@app.route('/blog')
 @app.route('/blog/<blog_id>', methods=('get','post'))
 def blog(blog_id=None):
     if request.method == 'POST':
@@ -93,14 +109,9 @@ def blog(blog_id=None):
         blog = cur.fetchall() 
         cur.close()
         con.close()
+    else:
+        return redirect(url_for('index'))
     return render_template('blog.html', blog=blog)
-
-@app.route('/post_page', methods=('get','post'))
-def post_page():
-    status=None
-    if request.method == 'POST':
-        status = request.form['post_example']
-    return render_template('post_page.html',status=status)
 
 @app.route('/register', methods=('get', 'post'))
 def register():

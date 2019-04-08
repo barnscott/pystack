@@ -1,9 +1,12 @@
 table.bulletin,table.bulletin th,table.bulletin td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    text-align: left;
-  }
-table.form tr,td{
     border-style: none;
     border:0;
+  }
+table.form tr,table.form td{
+    border-style: none;
+    border:0;
+  }
+table.users,table.users tr,table.users th,table.users td{
+    border: 1px solid black;
+    border-collapse: collapse;
   }

@@ -3,17 +3,20 @@ set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
     CREATE TABLE groups (
-        group_id INTEGER PRIMARY KEY,
+        group_id serial PRIMARY KEY,
         created_on TIMESTAMP NOT NULL,
         groupname VARCHAR (50) UNIQUE NOT NULL
     );
     CREATE TABLE users (
         user_id serial PRIMARY KEY,
-        group_id INTEGER NOT NULL DEFAULT 100,
+        group_id INTEGER NOT NULL DEFAULT 3,
         created_on TIMESTAMP NOT NULL,
         modified_on TIMESTAMP NOT NULL,
         username VARCHAR (50) UNIQUE NOT NULL,
         password VARCHAR (100) NOT NULL,
+        name_first VARCHAR (50),
+        name_last VARCHAR (50),
+        email VARCHAR (50),
         FOREIGN KEY (group_id) REFERENCES groups (group_id)
     );
     CREATE TABLE bulletins (
@@ -34,9 +37,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     );
 
     INSERT INTO groups (group_id, created_on, groupname)
-    VALUES  (0,current_timestamp,'admin'),
-            (1,current_timestamp,'manager'),
-            (100,current_timestamp,'member');
+    VALUES  (DEFAULT,current_timestamp,'admin'),
+            (DEFAULT,current_timestamp,'manager'),
+            (DEFAULT,current_timestamp,'member');
 
     INSERT INTO bulletins
     VALUES  (DEFAULT,current_timestamp,current_timestamp,

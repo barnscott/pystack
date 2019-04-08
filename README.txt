@@ -69,14 +69,15 @@ pystack_flask
 -------------------------------------
 #build nginx
 
+sudo docker rm --force pystack_nginx0 && \
 cd $pystack_path/nginx && \
 sudo docker build . -t pystack_nginx && \
-sudo docker rm --force pystack_nginx0 && \
-sudo docker run -d -p 80:80 \
+sudo docker run \
+-p 80:80 \
 --network=pynet \
---restart unless-stopped \
 --name pystack_nginx0 \
-pystack_nginx
+--restart unless-stopped \
+-d pystack_nginx
 
 #debugger:
 sudo docker run --rm -p 80:80 \

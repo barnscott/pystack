@@ -14,12 +14,14 @@
     <h1>{{ conf.name }}</h1>
     <p>
         <a href="{{ url_for('index') }}"><button>Home</button></a>
-        <a href="{{ url_for('text_page') }}"><button>Example:Text</button></a>
-        <a href="{{ url_for('post_page') }}"><button>Example:Post</button></a>
-        
         
         {% if session['group_id'] %}
-        <a href="{{ url_for('manager') }}"><button>Site manager</button></a>
+            {% if session['group_id'] <3 %}
+            <a href="{{ url_for('post') }}"><button>New post</button></a>
+                {% if session['group_id'] ==1 %}
+                <a href="{{ url_for('users') }}"><button>User manager</button></a>
+                {% endif %}
+            {% endif %}
         <a href="{{ url_for('logout') }}"><button>Logout</button></a>
         {% else %}
         <a href="{{ url_for('login') }}"><button>Login</button></a>

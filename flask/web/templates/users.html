@@ -1,0 +1,31 @@
+{% include "elements/header.html" %}
+
+<h2>Users managment</h2>
+<table class="users">
+    <tr>
+        <th>ID</th>
+        <th>Group ID</th>
+        <th>Created On</th>
+        <th>Modified On</th>
+        <th>Username</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+{% for i in users %} 
+    <tr>
+        <td>{{i[0]}}</td>
+        <td>{{i[1]}}</td>
+        <td>{{i[2].strftime('%Y-%m-%d %H:%M')}}</td>
+        <td>{{i[3].strftime('%Y-%m-%d %H:%M')}}</td>
+        <td>{{i[4]}}</td>
+        <td>{{i[5]}}</td>
+        <td>{{i[6]}}</td>
+        <td>{{i[7]}}</td>
+        <td><a href="{{ url_for( 'users' , user_id='%s' % i[0]) }}" method="post"></a> Edit</a></td>
+    </tr>
+{% endfor %}
+</table>
+
+{% include "elements/footer.html" %}
