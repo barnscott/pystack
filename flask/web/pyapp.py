@@ -45,9 +45,10 @@ def post():
         if request.form['send'] == 'Create bulletin':
             subject = request.form['nb_subject']
             content = request.form['nb_content']
+            due = request.form['nb_due']
             con = connector()
             cur = con.cursor()
-            cur.execute("INSERT INTO bulletins VALUES (DEFAULT,current_timestamp,current_timestamp,'%s','%s')" % (subject,content))
+            cur.execute("INSERT INTO bulletins VALUES (DEFAULT,current_timestamp,current_timestamp,'%s','%s','%s')" % (subject,content,due))
             con.commit()
             cur.close()
             con.close()
@@ -68,16 +69,40 @@ def post():
     return render_template('post.html')
 
 @app.route('/users', methods=('get','post'))
-def users(user_id=None):
+def users():
+    user_id=None
+    users=None
     if session['group_id'] is not 1:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        con = connector()
-        cur = con.cursor()
-        cur.execute("select user_id,group_id,created_on,modified_on,username,name_first,name_last,email from users where user_id='%s'" % user_id)
-        users = cur.fetchall() 
-        cur.close()
-        con.close()
+        if request.form['send'] == 'Update':
+            user_id = request.form['user_id']
+            group_id = request.form['group_id']
+            username = request.form['username']
+            name_first = request.form['name_first']
+            name_last = request.form['name_last']
+            email = request.form['email']
+            group = q_cont('group_id',group_id)    
+            username = q_cont(',username',username)    
+            name_first = q_cont(',name_first',name_first)    
+            name_last = q_cont(',name_last',name_last)    
+            email = q_cont(',email',email)    
+
+            con = connector()
+            cur = con.cursor()
+            cur.execute("update users set %s %s %s %s %s where user_id='%s'" % (group,username,name_first,name_last,email,user_id))
+            con.commit()
+            cur.close()
+            con.close()
+            return redirect(url_for('users'))
+        else:
+            user_id = request.form['send']
+            con = connector()
+            cur = con.cursor()
+            cur.execute("select user_id,group_id,created_on,modified_on,username,name_first,name_last,email from users where user_id='%s'" % user_id)
+            users = cur.fetchall() 
+            cur.close()
+            con.close()
     else:
         con = connector()
         cur = con.cursor()
@@ -85,7 +110,16 @@ def users(user_id=None):
         users = cur.fetchall() 
         cur.close()
         con.close()
-    return render_template('users.html',users=users)
+    return render_template('users.html',users=users,user_id=user_id)
+
+def q_cont(arg_n,arg):
+    output=''
+    if arg:
+        output = "%s = '%s'" % (arg_n,arg)
+        return output
+    else:
+        return output
+
 
 @app.route('/blog')
 @app.route('/blog/<blog_id>', methods=('get','post'))

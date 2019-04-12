@@ -1,10 +1,11 @@
 {% include "elements/header.html" %}
 
 <h2>Users managment</h2>
+
 <table class="users">
     <tr>
         <th>ID</th>
-        <th>Group ID</th>
+        <th>Group</th>
         <th>Created On</th>
         <th>Modified On</th>
         <th>Username</th>
@@ -13,19 +14,74 @@
         <th>Email</th>
         <th>Action</th>
     </tr>
+{% if user_id%}
+<form method='post'>
 {% for i in users %} 
     <tr>
+    
         <td>{{i[0]}}</td>
-        <td>{{i[1]}}</td>
+        <td>
+            {% if i[1] == 1 %} Admin
+            {% elif i[1] == 2 %} Manager
+            {% elif i[1] == 3 %} Member
+            {% else %} Other
+            {% endif %}
+        </td>
         <td>{{i[2].strftime('%Y-%m-%d %H:%M')}}</td>
         <td>{{i[3].strftime('%Y-%m-%d %H:%M')}}</td>
         <td>{{i[4]}}</td>
         <td>{{i[5]}}</td>
         <td>{{i[6]}}</td>
         <td>{{i[7]}}</td>
-        <td><a href="{{ url_for( 'users' , user_id='%s' % i[0]) }}" method="post"></a> Edit</a></td>
+        <td> - </td>   
     </tr>
 {% endfor %}
+    <tr>
+        <td><input type="hidden" name="user_id" id="user_id" value="{{users[0][0]}}">-</td>
+        <td>
+            <select name="group_id" id="group_id">
+                <option value="1">Admin</option>
+                <option value="2">Manager</option>
+                <option value="3">Member</option>
+            </select>
+        </td>
+        <td> - </td>
+        <td> - </td>
+        <td><input name="username" id="username" maxlength="50"></td>
+        <td><input name="name_first" id="name_first" maxlength="50"></td>
+        <td><input name="name_last" id="name_last" maxlength="50"></td>
+        <td><input name="email" id="email" maxlength="50"></td>
+        <td><input type="submit" name="send" value="Update"></td>   
+    </tr>
+</form>
+{% else %}
+{% for i in users %} 
+    <tr>
+        <td>{{i[0]}}</td>
+        <td>
+            {% if i[1] == 1 %} Admin
+            {% elif i[1] == 2 %} Manager
+            {% elif i[1] == 3 %} Member
+            {% else %} Other
+            {% endif %}
+        </td>
+        <td>{{i[2].strftime('%Y-%m-%d %H:%M')}}</td>
+        <td>{{i[3].strftime('%Y-%m-%d %H:%M')}}</td>
+        <td>{{i[4]}}</td>
+        <td>{{i[5]}}</td>
+        <td>{{i[6]}}</td>
+        <td>{{i[7]}}</td>
+        <td>
+            <form method='post'>
+                <button type="submit" name="send" value="{{ i[0] }}" formmethod="post">Edit</button>
+            </form>
+            
+        </td>
+    </tr>
+{% endfor %}
+
+
+{% endif %}
 </table>
 
 {% include "elements/footer.html" %}

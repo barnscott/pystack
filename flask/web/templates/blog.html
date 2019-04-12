@@ -1,6 +1,6 @@
 {% include "elements/header.html" %}
 
-{% if session['group_id'] <3  %}
+{% if session['group_id'] and session['group_id'] <3 %}
 <form method="post">
     <table class="form">
         <tr>
